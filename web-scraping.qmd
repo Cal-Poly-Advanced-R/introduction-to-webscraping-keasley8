@@ -33,7 +33,7 @@ webpage <- read_html(url)
 
 # Extract the cheese names and URLs
 cheese_data <- webpage %>%
-  html_nodes(".cheese-item") %>%
+  html_nodes(".cheese-item h3") %>%
   html_nodes("a") %>%
   html_attr("href") %>%
   paste0("https://cheese.com", .)
@@ -58,6 +58,7 @@ print(cheese_df)
 -   Whether or not the cheese has a picture (e.g., [gouda](https://www.cheese.com/gouda/) has a picture, but [bianco](https://www.cheese.com/bianco/) does not)
 
 To be kind to the website owners, please add a 1 second pause between page queries. (Note that you can view 100 cheeses at a time.)
+
 
 **Part 5:** When you go to a particular cheese's page (like [gouda](https://www.cheese.com/gouda/)), you'll see more detailed information about the cheese. For [**just 10**]{.underline} of the cheeses in the database, obtain the following detailed information:
 
