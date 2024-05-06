@@ -29,6 +29,8 @@ The robots.txt file is located at https://www.cheese.com/robots.txt. This gives 
 
 Fully document your process of checking this code. Record any observations you make about where ChatGPT is useful / not useful.
 
+- ChatGPT is useful in getting the names of the cheese for the first page, however it is not accurately getting the url's for the cheeses. Some of the urls it is webscraping twice which is offsetting the cheese name from the correct url.
+
 ```{r}
 #| eval: false
 #| label: small-example-of-getting-cheese-info
@@ -38,29 +40,29 @@ library(rvest)
 library(dplyr)
 
 # Define the URL
-url <- "https://www.cheese.com/alphabetical"
+url <- "https://www.cheese.com/alphabetical" #This is the url for the alphabetical list of all the cheeses on the site
 
 # Read the HTML content from the webpage
-webpage <- read_html(url)
+webpage <- read_html(url) #This is useful to read in the url
 
 # Extract the cheese names and URLs
 cheese_data <- webpage %>%
-  html_nodes(".cheese-item") %>%
+  html_nodes(".cheese-item h3") %>% # We added h3 to fix the duplicates problem
   html_nodes("a") %>%
   html_attr("href") %>%
-  paste0("https://cheese.com", .)
+  paste0("https://cheese.com", .) # This is making the urls for the cheese
 
 cheese_names <- webpage %>%
   html_nodes(".cheese-item h3") %>%
-  html_text()
+  html_text() # this is making the names for the cheese
 
 # Create a data frame to store the results
 cheese_df <- data.frame(Name = cheese_names,
                         URL = cheese_data,
-                        stringsAsFactors = FALSE)
+                        stringsAsFactors = FALSE) # This is creating a dataframe with the cheese names and the urls
 
 # Print the data frame
-print(cheese_df)
+print(cheese_df) #This is printing the cheese_df, however the print() function does not need to be used
 ```
 
 **Part 4:** Obtain the following information for **all** cheeses in the database:
@@ -70,6 +72,7 @@ print(cheese_df)
 -   Whether or not the cheese has a picture (e.g., [gouda](https://www.cheese.com/gouda/) has a picture, but [bianco](https://www.cheese.com/bianco/) does not)
 
 To be kind to the website owners, please add a 1 second pause between page queries. (Note that you can view 100 cheeses at a time.)
+
 
 **Part 5:** When you go to a particular cheese's page (like [gouda](https://www.cheese.com/gouda/)), you'll see more detailed information about the cheese. For [**just 10**]{.underline} of the cheeses in the database, obtain the following detailed information:
 
