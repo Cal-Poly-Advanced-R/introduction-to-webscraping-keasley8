@@ -1,13 +1,25 @@
 ---
 title: "Lab 5"
-format: html
-embed-resources: true
+author: "Eva, Chloe, and Kai"
+format: 
+  html: 
+    self-contained: true
+    code-tools: true
+    code-fold: true
 editor: visual
+execute: 
+  echo: true
+  include: true
+  message: false
+  warning: false
+embed-resources: true
 ---
 
 > **Goal:** Scrape information from <https://www.cheese.com> to obtain a dataset of characteristics about different cheeses, and gain deeper insight into your coding process. 🪤
 
 **Part 1:** Locate and examine the `robots.txt` file for this website. Summarize what you learn from it.
+
+The robots.txt file is located at https://www.cheese.com/robots.txt. This gives us the link to the site map which is https://www.cheese.com/sitemap.xml and that the user agent is a "\*" which means anyone can webscrape the site. The site map includes the url to all the different types of cheese in alphabetical order.
 
 **Part 2:** Learn about the `html_attr()` function from `rvest`. Describe how this function works with a small example.
 
