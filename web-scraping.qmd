@@ -11,6 +11,18 @@ editor: visual
 
 **Part 2:** Learn about the `html_attr()` function from `rvest`. Describe how this function works with a small example.
 
+The html_attr() function gets a single attribute from the webpage. In the example, the html_elements("a") is pulling everything that has an anchor, or a hyperlink. Then the html_attr("class") is identifying which class each one is.
+
+```{r}
+library(rvest)
+url <- "https://www.cheese.com/alphabetical"
+webpage <- read_html(url)
+webpage |>
+  html_elements("a") |>
+  html_attr("class")
+
+```
+
 **Part 3:** (Do this alongside Part 4 below.) I used [ChatGPT](https://chat.openai.com/chat) to start the process of scraping cheese information with the following prompt:
 
 > Write R code using the rvest package that allows me to scrape cheese information from cheese.com.
