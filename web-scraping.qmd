@@ -41,7 +41,7 @@ webpage |>
 
 Fully document your process of checking this code. Record any observations you make about where ChatGPT is useful / not useful.
 
-- ChatGPT is useful in getting the names of the cheese for the first page, however it is not accurately getting the url's for the cheeses. Some of the urls it is webscraping twice which is offsetting the cheese name from the correct url.
+-   ChatGPT is useful in getting the names of the cheese for the first page, however it is not accurately getting the url's for the cheeses. Some of the urls it is webscraping twice which is offsetting the cheese name from the correct url.
 
 ```{r}
 #| eval: false
@@ -103,9 +103,14 @@ get_cheese <- function(url) {
     html_nodes(".cheese-item h3") %>%
     html_text()
   
+  cheese_img <- webpage |>
+    html_nodes(".cheese-item img") |>
+    html_attr("src")
+  
   # Create a data frame to store the results
   cheese_df <- data.frame(Name = cheese_names,
                           URL = cheese_data,
+                          Img = cheese_img,
                           stringsAsFactors = FALSE)
 
   # Print the data frame
@@ -125,20 +130,13 @@ for(i in 1:20){
   
   url <- paste0("https://www.cheese.com/alphabetical?per_page=100&page=", i)
   Sys.sleep(1)
-  cheese <- get_cheese(url) |>
-    bind_rows()
-  all_cheeses <- c(all_cheeses, cheese)
+  cheese <- get_cheese(url) 
+  all_cheeses <- bind_rows(all_cheeses, cheese)
 }
-#url_df <- data.frame(URLs = all_cheeses)
-
-#print(url_df)
-
 
 #source for for loop: https://stackoverflow.com/questions/27153263/adding-elements-to-a-list-in-for-loop-in-r
 
-
 ```
-
 
 **Part 5:** When you go to a particular cheese's page (like [gouda](https://www.cheese.com/gouda/)), you'll see more detailed information about the cheese. For [**just 10**]{.underline} of the cheeses in the database, obtain the following detailed information:
 
