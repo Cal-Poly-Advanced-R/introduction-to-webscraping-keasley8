@@ -103,9 +103,14 @@ get_cheese <- function(url) {
     html_nodes(".cheese-item h3") %>%
     html_text()
   
+  cheese_img <- webpage |>
+    html_nodes(".cheese-item img") |>
+    html_attr("src")
+  
   # Create a data frame to store the results
   cheese_df <- data.frame(Name = cheese_names,
                           URL = cheese_data,
+                          Img = cheese_img,
                           stringsAsFactors = FALSE)
 
   # Print the data frame
