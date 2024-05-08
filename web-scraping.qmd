@@ -17,6 +17,15 @@ embed-resources: true
 
 > **Goal:** Scrape information from <https://www.cheese.com> to obtain a dataset of characteristics about different cheeses, and gain deeper insight into your coding process. 🪤
 
+```{r}
+#| label: libraries
+library(rvest)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+
+```
+
 **Part 1:** Locate and examine the `robots.txt` file for this website. Summarize what you learn from it.
 
 The robots.txt file is located at https://www.cheese.com/robots.txt. This gives us the link to the site map which is https://www.cheese.com/sitemap.xml and that the user agent is a "\*" which means anyone can webscrape the site. The site map includes the url to all the different types of cheese in alphabetical order.
@@ -29,8 +38,6 @@ The html_attr() function gets a single attribute from the webpage. In the exampl
 #| message: false
 #| label: function-use-example
 
-library(rvest)
-library(tidyverse)
 url <- "https://www.cheese.com/alphabetical"
 webpage <- read_html(url)
 webpage |>
@@ -50,10 +57,6 @@ Fully document your process of checking this code. Record any observations you m
 ```{r}
 #| eval: false
 #| label: small-example-of-getting-cheese-info
-
-# Load required libraries
-library(rvest)
-library(dplyr)
 
 # Define the URL
 url <- "https://www.cheese.com/alphabetical" #This is the url for the alphabetical list of all the cheeses on the site
@@ -112,7 +115,10 @@ get_cheese <- function(url) {
   # Extract the image links
   cheese_img <- webpage |>
     html_nodes(".cheese-item img") |>
-    html_attr("src")
+    html_attr("src") |>
+    str_replace("^/static/.*", "No image") |>
+    str_replace("^/media/.*", "Yes")
+
   
   # Create a data frame to store the results
   cheese_df <- data.frame(Name = cheese_names,
@@ -127,6 +133,7 @@ get_cheese <- function(url) {
 
 get_cheese(url)
 
+# source for stringr cheat sheet: https://github.com/rstudio/cheatsheets/blob/main/strings.pdf
 
 ```
 
