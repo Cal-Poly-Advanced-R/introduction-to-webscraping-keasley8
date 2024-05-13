@@ -169,6 +169,7 @@ for(i in 1:20){
 (Just 10 to avoid overtaxing the website! Continue adding a 1 second pause between page queries.)
 
 ### Fetching Cheeses with Name
+
 ```{r}
 #| label: fetching-cheeses-with-name
 
@@ -203,29 +204,38 @@ url <- paste0("https://www.cheese.com/", cheese_type, "/")
 ```
 
 ### Fetching Cheeses with URL
+
 ```{r}
 #| label: fetching-cheeses-with-url
 
 #source for str_extract: https://stackoverflow.com/questions/57438472/using-str-extract-in-r-to-extract-a-number-before-a-substring-with-regex
 #source for sumarise_all: https://stackoverflow.com/questions/64062261/collapsing-strings-with-summarise-all
+#source for sub: https://stackoverflow.com/questions/25307899/r-remove-anything-after-comma-from-column
 
 get_cheese_info_url <- function(cheese_url){
+  #Reading in the URL
   webpage <- read_html(cheese_url)
+  
+  #Fetch the cheese name
+  cheese_type <- webpage |>
+    html_node("h1") |>
+    html_text() |>
+    str_trim()
+  
+  #Fetch all of the cheese info
   cheese_info <- webpage |>
     html_nodes("li p") |>
     html_text() |>
     unique()
-  
-  cheese_type <- webpage |>
-    html_nodes("h1") |>
-    html_text()
-  
+ 
+  #Extract all the cheese info and remove headers
   made_from <- str_extract(cheese_info, "(?<=Made from ).*")
   country <- str_extract(cheese_info,"(?<=Country of origin: ).*" )
   family <- str_extract(cheese_info,"(?<=Family: ).*" )
   type <- str_extract(cheese_info, "(?<=Type: ).*")
   flavour <- str_extract(cheese_info, "(?<=Flavour: ).*")
   
+  #Convert to a dataframe
   cheese_info_df <- 
     data.frame(
       cheese_type = cheese_type,
@@ -234,24 +244,31 @@ get_cheese_info_url <- function(cheese_url){
       Family = family,
       Type = type,
       Flavour = flavour
-      ) |> 
-    summarise_all(~ toString(na.omit(.)))
+      )  |>
+    #Remove all of the NAs
+    summarise_all(~ toString(na.omit(.))) |> 
+    #Mutate to have one cheese name
+    mutate(
+      cheese_type = sub(",.*", "", cheese_type)
+    )
 }
-```
 
+
+
+```
 
 ```{r}
 #| label: map-function-for-cheese-info
 
-# Why is cheese name repeated many times in cheese type
+#Select 10 cheese
 cheeses_top10 <- all_cheeses |>
   slice_head(n = 10)
 
+#Iterate through the function for each of the 10 cheeses
 cheese_info <- map(cheeses_top10$URL, get_cheese_info_url) |>
   bind_rows()
 
 cheese_info
 ```
-
 
 **Part 6:** Evaluate the code that you wrote in terms of the [core principle of good function writing](function-strategies.qmd). To what extent does your implementation follow these principles? What are you learning about what is easy / challenging for you about approaching complex tasks requiring functions and loops?
