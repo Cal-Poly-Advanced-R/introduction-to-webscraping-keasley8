@@ -134,7 +134,6 @@ get_cheese <- function(url) {
 }
 
 
-get_cheese(url)
 ```
 
 ```{r}
@@ -217,6 +216,7 @@ get_cheese_info_url <- function(cheese_url){
     mutate(
       cheese_type = sub(",.*", "", cheese_type)
     )
+  
 }
 
 
@@ -230,10 +230,17 @@ get_cheese_info_url <- function(cheese_url){
 cheeses_top10 <- all_cheeses |>
   slice_head(n = 10)
 
+
 #Incorporating the 1 second pause
 cheese_info <- map(cheeses_top10$URL, slowly(get_cheese_info_url, 
                                              rate = rate_delay(pause = 1))
                    ) |>
+
+#Iterate through the function for each of the 10 cheeses
+cheese_info <- map(cheeses_top10$URL,
+                    slowly(get_cheese_info_url,
+                           rate = rate_delay(pause = 2))) |>
+
   bind_rows()
 
 cheese_info
