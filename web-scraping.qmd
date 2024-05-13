@@ -234,7 +234,7 @@ cheeses_top10 <- all_cheeses |>
 #Incorporating the 1 second pause
 cheese_info <- map(cheeses_top10$URL, slowly(get_cheese_info_url, 
                                              rate = rate_delay(pause = 1))
-                   ) |>
+                   ) 
 
 #Iterate through the function for each of the 10 cheeses
 cheese_info <- map(cheeses_top10$URL,
