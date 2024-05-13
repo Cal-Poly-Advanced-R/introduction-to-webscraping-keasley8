@@ -229,13 +229,26 @@ get_cheese_info_url <- function(cheese_url){
 #Select 10 cheese
 cheeses_top10 <- all_cheeses |>
   slice_head(n = 10)
-  
 
-#Iterate through the function for each of the 10 cheeses
-cheese_info <- map(cheeses_top10$URL, get_cheese_info_url) |>
+#Incorporating the 1 second pause
+cheese_info <- map(cheeses_top10$URL, slowly(get_cheese_info_url, 
+                                             rate = rate_delay(pause = 1))
+                   ) |>
   bind_rows()
 
 cheese_info
 ```
 
 **Part 6:** Evaluate the code that you wrote in terms of the [core principle of good function writing](function-strategies.qmd). To what extent does your implementation follow these principles? What are you learning about what is easy / challenging for you about approaching complex tasks requiring functions and loops?
+
+In this lab, we have created functions that demonstrate reusability and 
+efficiency. For example, the get_cheese function takes in the argument "url",
+defined above the function. The function is used to read the url and use the 
+CSS selectors to paste together the URLs for the individual cheeses, the
+names of the cheese, and whether the cheese has an image or not. This function 
+was then used to create the data frame all_cheeses. We then 
+define a function get_cheese_info_url which takes in a single argument,
+"cheese_url". This argument is used to read in the URL and obtain the cheese
+name and information from the CSS selectors. These functions are then called
+to create the final dataframe cheese_info, demonstrating their reproducibility,
+reusability, and efficiency. 
